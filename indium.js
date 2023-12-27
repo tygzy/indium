@@ -42,6 +42,8 @@ class Dropdown {
     }
 
     open() {
+        this.dropdown.classList.add('active');
+
         this.dropdown.style.left = this.origin.getBoundingClientRect().x +
             this.offset_x + this.origin.offsetWidth + 'px';
         this.dropdown.style.top = this.origin.getBoundingClientRect().y +
@@ -55,8 +57,6 @@ class Dropdown {
             this.dropdown.style.top = ((this.origin.getBoundingClientRect().y - this.offset_y)
                 + this.origin.offsetHeight) + 'px';
         }
-
-        this.dropdown.classList.add('active');
     }
 
     close() {
@@ -152,34 +152,29 @@ class Gallery {
 
 class Label {
 
-    constructor(hover_element, label, offset_x, offset_y) {
+    constructor(hover_element, label) {
         this.element = hover_element;
         this.label = label;
-        this.offset_x = offset_x;
-        this.offset_y = offset_y;
         this._auto_run();
     }
 
     open() {
-        this.element.style.left = this.label.getBoundingClientRect().x +
-            this.offset_x + this.label.offsetWidth + 'px';
-        this.element.style.top = this.label.getBoundingClientRect().y +
-            this.offset_y + this.label.offsetHeight + 'px';
-        this.element.style.transform = 'translateX(-50%)';
-
-        this.element.classList.add('active');
+        this.label.classList.add('active');
+        this.label.style.left = 'calc(' + (this.element.getBoundingClientRect().x + (this.element.offsetWidth / 2)) + 'px)';
+        this.label.style.top = 'calc(' + (this.element.getBoundingClientRect().y - this.label.offsetHeight) + 'px - 1rem)';
+        this.label.style.transform = 'translateX(-50%)';
     }
 
     close() {
-        this.element.classList.remove('active');
+        this.label.classList.remove('active');
     }
 
     _auto_run() {
-
-        if(this.element.matches(':hover')) {
+        this.element.addEventListener('mouseover', event => {
             this.open();
-        } else {
+        });
+        this.element.addEventListener('mouseout', event => {
             this.close();
-        }
+        });
     }
 }
