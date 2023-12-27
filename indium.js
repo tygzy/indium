@@ -42,8 +42,6 @@ class Dropdown {
     }
 
     open() {
-        this.dropdown.classList.add('active');
-
         this.dropdown.style.left = this.origin.getBoundingClientRect().x +
             this.offset_x + this.origin.offsetWidth + 'px';
         this.dropdown.style.top = this.origin.getBoundingClientRect().y +
@@ -57,6 +55,8 @@ class Dropdown {
             this.dropdown.style.top = ((this.origin.getBoundingClientRect().y - this.offset_y)
                 + this.origin.offsetHeight) + 'px';
         }
+
+        this.dropdown.classList.add('active');
     }
 
     close() {
@@ -160,9 +160,8 @@ class Label {
 
     open() {
         this.label.classList.add('active');
-        this.label.style.left = 'calc(' + (this.element.getBoundingClientRect().x + (this.element.offsetWidth / 2)) + 'px)';
+        this.label.style.left = 'calc(' + (this.element.getBoundingClientRect().x + (this.element.offsetWidth / 2) - (this.label.offsetWidth / 2)) + 'px)';
         this.label.style.top = 'calc(' + (this.element.getBoundingClientRect().y - this.label.offsetHeight) + 'px - 1rem)';
-        this.label.style.transform = 'translateX(-50%)';
     }
 
     close() {
