@@ -47,11 +47,11 @@ class Dropdown {
         this.dropdown.style.top = this.origin.getBoundingClientRect().y +
             this.offset_y + this.origin.offsetHeight + 'px';
 
-        if(origin.getBoundingClientRect().x + this.dropdown.offsetWidth > screen.width) {
+        if(this.origin.getBoundingClientRect().x + this.dropdown.offsetWidth > screen.width) {
             this.dropdown.style.left = ((this.origin.getBoundingClientRect().x - this.offset_x)
                 + this.origin.offsetWidth) + 'px';
         }
-        if(origin.getBoundingClientRect().y + this.dropdown.offsetHeight > screen.height) {
+        if(this.origin.getBoundingClientRect().y + this.dropdown.offsetHeight > screen.height) {
             this.dropdown.style.top = ((this.origin.getBoundingClientRect().y - this.offset_y)
                 + this.origin.offsetHeight) + 'px';
         }
@@ -147,5 +147,39 @@ class Gallery {
 
     open_gallery() {
         this.item_view.classList.add('active');
+    }
+}
+
+class Label {
+
+    constructor(hover_element, label, offset_x, offset_y) {
+        this.element = hover_element;
+        this.label = label;
+        this.offset_x = offset_x;
+        this.offset_y = offset_y;
+        this._auto_run();
+    }
+
+    open() {
+        this.element.style.left = this.label.getBoundingClientRect().x +
+            this.offset_x + this.label.offsetWidth + 'px';
+        this.element.style.top = this.label.getBoundingClientRect().y +
+            this.offset_y + this.label.offsetHeight + 'px';
+        this.element.style.transform = 'translateX(-50%)';
+
+        this.element.classList.add('active');
+    }
+
+    close() {
+        this.element.classList.remove('active');
+    }
+
+    _auto_run() {
+
+        if(this.element.matches(':hover')) {
+            this.open();
+        } else {
+            this.close();
+        }
     }
 }
