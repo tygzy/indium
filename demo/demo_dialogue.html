@@ -3,7 +3,6 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Dialogue demo page</title>
-		<script src='../indium.js'></script>
 		<style>
 			*.window {
 				display: none;
@@ -24,6 +23,34 @@
 	</head>
 	<body>
 		<script>
+			class Dialogue {
+
+				constructor(dialogue, origin) {
+					this.dialogue = dialogue;
+					this.origin = origin;
+					this._auto_run();
+				}
+
+				open() {
+					this.dialogue.classList.add('active');
+				}
+
+				close() {
+					this.dialogue.classList.remove('active');
+				}
+
+				_auto_run() {
+					document.addEventListener('click', event => {
+						const on_dialogue = this.dialogue.contains(event.target);
+						const on_origin = this.origin.contains(event.target);
+
+						if(!on_dialogue && !on_origin) {
+							this.close();
+						}
+					});
+				}
+			}
+
 			let dialogue;
 			window.onload = (event) => {
 				dialogue = new Dialogue(document.getElementById('dialogue_el'), document.getElementById('dialogue_open'));

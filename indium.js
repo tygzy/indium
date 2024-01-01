@@ -179,6 +179,7 @@ class Gallery {
     }
 }
 
+
 class Label {
 
     constructor(hover_element, label) {

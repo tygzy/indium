@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>PopWindow demo page</title>
-		<script src='../indium.js'></script>
+
 		<style>
 			*.window {
 				display: none;
@@ -24,6 +24,32 @@
 	</head>
 	<body>
 		<script>
+			class PopWindow {
+				constructor(window, window_close) {
+					this.window = window;
+					this.window_close = window_close;
+					this._auto_run();
+				}
+
+				open() {
+					this.window.classList.add('active');
+				}
+
+				close() {
+					this.window.classList.remove('active');
+				}
+
+				get is_open() {
+					return this.window.classList.contains('active');
+				}
+
+				_auto_run() {
+					this.window_close.addEventListener('click', event => {
+						this.close();
+					});
+				}
+			}
+
 			let pop_window;
 			window.onload = (event) => {
 				pop_window = new PopWindow(document.getElementById('pop_window_el'), document.getElementById('pop_window_close'));

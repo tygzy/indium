@@ -1,6 +1,8 @@
 # Indium
 
-Some JavaScript classes that can be used to add functionality for dynamic elements to a website.
+Indium is a library of classes to easily manage the creation and use of Pop-up window, Dialogues, Hover labels, Dropdowns and a Gallery.
+
+The individual classes will not generate any content for you, and will only allow you to easily open or close them or other specific features for each class.
 
 ## How to use
 
@@ -16,7 +18,7 @@ Firstly, you must create the correct CSS styles for the dynamic elements to work
     position: absolute;
     top: 50vh;
     left: 50vw;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
 }
 
 *.window.active {
