@@ -32,6 +32,32 @@ class PopWindow {
 }
 
 
+class Dialogue {
+
+    constructor(dialogue) {
+        this.dialogue = dialogue;
+    }
+
+    open() {
+        this.dialogue.classList.add('active');
+    }
+
+    close() {
+        this.dialogue.classList.remove('active');
+    }
+
+    _auto_run() {
+        document.addEventListener('click', event => {
+            const on_dialogue = this.dialogue.contains(event.target);
+
+            if(!on_dialogue) {
+                this.close();
+            }
+        });
+    }
+}
+
+
 class Dropdown {
     constructor(origin, dropdown, offset_x, offset_y) {
         this.origin = origin;
