@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Dialogue demo page</title>
+		<script src='../indium.js'></script>
+		<style>
+			*.window {
+				display: none;
+				position: absolute;
+				top: 50vh;
+				left: 50vw;
+				transform: translate(-50%, -50%);
+
+				background-color: grey;
+				padding: 1rem;
+				min-width: 20vw;
+			}
+
+			*.window.active {
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<script>
+			let dialogue;
+			window.onload = (event) => {
+				dialogue = new Dialogue(document.getElementById('dialogue_el'), document.getElementById('dialogue_open'));
+			};
+		</script>
+		<div class='window' id='dialogue_el'>
+			<h1>Test</h1>
+		</div>
+		<button onclick='dialogue.open();' id='dialogue_open'>Click here for a Dialogue</button>
+	</body>
+</html>

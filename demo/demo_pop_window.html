@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>PopWindow demo page</title>
+		<script src='../indium.js'></script>
+		<style>
+			*.window {
+				display: none;
+				position: absolute;
+				top: 50vh;
+				left: 50vw;
+				transform: translate(-50%, -50%);
+
+				background-color: grey;
+				padding: 1rem;
+				min-width: 20vw;
+			}
+
+			*.window.active {
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<script>
+			let pop_window;
+			window.onload = (event) => {
+				pop_window = new PopWindow(document.getElementById('pop_window_el'), document.getElementById('pop_window_close'));
+			};
+		</script>
+		<div class='window' id='pop_window_el'>
+			<span id='pop_window_close'>x</span>
+			<h1>Test</h1>
+		</div>
+		<button onclick='pop_window.open();'>Click here for a PopWindow</button>
+	</body>
+</html>

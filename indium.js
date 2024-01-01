@@ -34,8 +34,10 @@ class PopWindow {
 
 class Dialogue {
 
-    constructor(dialogue) {
+    constructor(dialogue, origin) {
         this.dialogue = dialogue;
+        this.origin = origin;
+        this._auto_run();
     }
 
     open() {
@@ -49,8 +51,9 @@ class Dialogue {
     _auto_run() {
         document.addEventListener('click', event => {
             const on_dialogue = this.dialogue.contains(event.target);
+            const on_origin = this.origin.contains(event.target);
 
-            if(!on_dialogue) {
+            if(!on_dialogue && !on_origin) {
                 this.close();
             }
         });

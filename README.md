@@ -42,9 +42,11 @@ Firstly, you must create the correct CSS styles for the dynamic elements to work
 Example on how to use a `Dialogue`
 
 ```javascript
-// Create an instance of the class when the page is fully loaded
+// Create an instance of the class when the page is fully loaded, declaring the variable before the onload handler is important here.
+
+let choice_dialogue;
 window.onload = (event) => {
-    let choice_dialogue = new Dialogue(document.getElementById('choice_dialogue_el'));
+    choice_dialogue = new Dialogue(document.getElementById('choice_dialogue_el'), document.getElementById('choice_dialogue_origin'));
 };
 ```
 
@@ -61,5 +63,5 @@ window.onload = (event) => {
 </div>
 
 <!-- Easily reference the Dialogue by just using the class instance variable. -->
-<button onclick='choice_dialogue.open();'>Click here for a dialogue</button>
+<button onclick='choice_dialogue.open();' id='choice_dialogue_origin'>Click here for a dialogue</button>
 ```
