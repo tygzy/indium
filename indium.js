@@ -137,23 +137,35 @@ class Gallery {
     }
 
     next_item() {
-        if(this.current_item <= 1) {
-            this.current_item = 1;
-        } else if(this.current_item > this.container.children.length) {
-            this.current_item = this.container.children.length;
+        if(this.current_item < 0) {
+            this.current_item = 0;
+        } else if(this.current_item >= this.container.children.length - 1) {
+            this.current_item = this.container.children.length - 1;
         } else {
             this.current_item += 1;
         }
+        console.log(this.current_item, this.container.children.length);
+        let new_item = document.createElement('img');
+        new_item.src = this.container.children[this.current_item].src;
+
+        this.item_view.replaceChildren();
+        this.item_view.appendChild(new_item);
     }
 
     previous_item() {
-        if(this.current_item <= 1) {
-            this.current_item = 1;
+        if(this.current_item <= 0) {
+            this.current_item = 0;
         } else if(this.current_item > this.container.children.length) {
             this.current_item = this.container.children.length;
         } else {
             this.current_item -= 1;
         }
+        console.log(this.current_item, this.container.children.length);
+        let new_item = document.createElement('img');
+        new_item.src = this.container.children[this.current_item].src;
+
+        this.item_view.replaceChildren();
+        this.item_view.appendChild(new_item);
     }
 
     open_item(item_number) {
@@ -164,6 +176,7 @@ class Gallery {
 
         this.item_view.replaceChildren();
         this.item_view.appendChild(new_item);
+        console.log(this.current_item);
     }
 
     remove_item() {
