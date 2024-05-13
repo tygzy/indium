@@ -220,3 +220,44 @@ class Label {
         });
     }
 }
+
+
+class UploadPreview {
+
+    constructor(input, preview_container) {
+        this.input = input;
+        this.container = preview_container;
+        this.files = [];
+        this._auto_run();
+        this.image_extensions = ['png', 'jpg', 'bmp', 'gif', 'jpeg', 'svg', 'tiff'];
+        this.video_extensions = ['mp4', 'avi', 'mov', 'wmv', 'mkv', 'webm', 'avchd', 'mpeg', 'mpg'];
+        this.re = /(?:\.([^.]+))?$/;
+    }
+
+    add_preview() {
+        for(let j=0; j<this.input.files.length; j++) {
+            this.files.push(this.input.files[j]);
+            let file_preview;
+            const file_reader = new FileReader();
+            console.log(this.image_extensions.includes(this.re.exec(this.input.files[j].name)[1]));
+            if(this.image_extensions.includes(this.re.exec(this.input.files[j].name)[1])) {
+                file_preview = document.createElement('img');
+            } else if(this.video_extensions.includes(this.re.exec(this.input.files[j].name)[1])) {
+                file_preview = document.createElement('video');
+                file_preview.controls = true;
+            }
+
+            file_reader.onload = function (event) {
+                file_preview.setAttribute('src', event.target.result);
+            }
+            file_reader.readAsDataURL(this.input.files[j]);
+            this.container.appendChild(file_preview);
+        }
+    }
+
+    _auto_run() {
+        this.input.addEventListener('change', event => {
+            this.add_preview();
+        });
+    }
+}
