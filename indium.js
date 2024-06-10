@@ -122,10 +122,11 @@ class Gallery {
     *
     */
 
-    constructor(container, item_view) {
+    constructor(container, item_view, direct_children=true) {
         this.container = container;
         this.item_view = item_view;
         this.current_item = null;
+        this.direct = direct_children;
     }
 
     get has_item_open() {
@@ -144,12 +145,8 @@ class Gallery {
         } else {
             this.current_item += 1;
         }
-        console.log(this.current_item, this.container.children.length);
-        let new_item = document.createElement('img');
-        new_item.src = this.container.children[this.current_item].src;
 
-        this.item_view.replaceChildren();
-        this.item_view.appendChild(new_item);
+        this.open_item();
     }
 
     previous_item() {
@@ -160,27 +157,32 @@ class Gallery {
         } else {
             this.current_item -= 1;
         }
-        console.log(this.current_item, this.container.children.length);
-        let new_item = document.createElement('img');
-        new_item.src = this.container.children[this.current_item].src;
 
-        this.item_view.replaceChildren();
-        this.item_view.appendChild(new_item);
+        this.open_item();
     }
 
-    open_item(item_number) {
+    open_item(item_number=null) {
         this.open_gallery();
         let new_item = document.createElement('img');
-        new_item.src = this.container.children[item_number].src;
-        this.current_item = item_number;
 
-        this.item_view.replaceChildren();
+        if(item_number) { item_number = parseInt(item_number); }
+
+        if(this.direct) { new_item.src = this.container.children[item_number ?? this.current_item].src; }
+        else { new_item.src = this.container.getElementsByTagName('img')[item_number ?? this.current_item].src; }
+
+        new_item.id = 'indium_gallery_expanded_image';
+        if(item_number) {
+            this.current_item = item_number;
+        }
+
+        this.remove_item();
         this.item_view.appendChild(new_item);
-        console.log(this.current_item);
     }
 
     remove_item() {
-        this.item_view.replaceChildren();
+        if(document.getElementById('indium_gallery_expanded_image')) {
+            this.item_view.removeChild(document.getElementById('indium_gallery_expanded_image'));
+        }
     }
 
     close_gallery() {
