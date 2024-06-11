@@ -5,6 +5,8 @@
 *
 */
 
+let all_dropdowns = [], all_labels = [];
+
 class PopWindow {
     constructor(window, window_close) {
         this.window = window;
@@ -62,17 +64,18 @@ class Dialogue {
 
 
 class Dropdown {
-    constructor(origin, dropdown, offset_x, offset_y) {
+    constructor(origin, dropdown, offset_x, offset_y, hover=false) {
         this.origin = origin;
         this.dropdown = dropdown;
         this.offset_x = offset_x;
         this.offset_y = offset_y;
+        this.hover = hover;
         this._auto_run();
     }
 
     open() {
         this.dropdown.style.left = this.origin.getBoundingClientRect().x +
-            this.offset_x + this.origin.offsetWidth + 'px';
+            this.offset_x + 'px';
         this.dropdown.style.top = this.origin.getBoundingClientRect().y +
             this.offset_y + this.origin.offsetHeight + 'px';
 
@@ -102,6 +105,32 @@ class Dropdown {
             this.open();
         });
 
+        if(this.hover) {
+            this.origin.addEventListener('mouseenter', event => {
+                this.open();
+            });
+
+            document.addEventListener('mousemove', event => {
+                let dx = this.dropdown.getBoundingClientRect().x, dw = this.dropdown.offsetWidth;
+                let dy = this.dropdown.getBoundingClientRect().y, dh = this.dropdown.offsetHeight;
+                let ox = this.origin.getBoundingClientRect().x, ow = this.origin.offsetWidth;
+                let oy = this.origin.getBoundingClientRect().y, oh = this.origin.offsetHeight;
+
+                if ( (event.clientX >= dx || event.clientX >= ox) && (event.clientY >= dy || event.clientY >= oy )) {
+                    if (
+                        (event.clientX <= dx + dw || event.clientX <= ox + ow)
+                            &&
+                        (event.clientY <= dy + dh || event.clientY <= oy + oh )
+                    ) {
+
+                    }  else {
+                        this.close();
+                    }
+                }  else {
+                    this.close();
+                }
+            });
+        }
         document.addEventListener('click', event => {
             const on_dropdown = this.dropdown.contains(event.target);
             const on_origin = this.origin.contains(event.target);

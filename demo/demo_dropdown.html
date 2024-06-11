@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Dropdown demo page</title>
+		<style>
+			*.dropdown {
+				display: none;
+				position: absolute;
+
+				background-color: grey;
+				padding: 1rem;
+				min-width: 20vw;
+			}
+
+			*.dropdown.active {
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<script>
+
+			let all_dropdowns = [];
+
+			class Dropdown {
+				constructor(origin, dropdown, offset_x, offset_y, hover=false) {
+                    all_dropdowns.push(this);
+					this.origin = origin;
+					this.dropdown = dropdown;
+					this.offset_x = offset_x;
+					this.offset_y = offset_y;
+					this.hover = hover;
+					this._auto_run();
+
+				}
+
+				open() {
+					this.dropdown.style.left = this.origin.getBoundingClientRect().x +
+						this.offset_x + 'px';
+					this.dropdown.style.top = this.origin.getBoundingClientRect().y +
+						this.offset_y + this.origin.offsetHeight + 'px';
+
+					if(this.origin.getBoundingClientRect().x + this.dropdown.offsetWidth > screen.width) {
+						this.dropdown.style.left = ((this.origin.getBoundingClientRect().x - this.offset_x)
+							+ this.origin.offsetWidth) + 'px';
+					}
+					if(this.origin.getBoundingClientRect().y + this.dropdown.offsetHeight > screen.height) {
+						this.dropdown.style.top = ((this.origin.getBoundingClientRect().y - this.offset_y)
+							+ this.origin.offsetHeight) + 'px';
+					}
+
+					this.dropdown.classList.add('active');
+				}
+
+				close() {
+					this.dropdown.classList.remove('active');
+				}
+
+				get is_open() {
+					return this.dropdown.classList.contains('active');
+				}
+
+				_auto_run() {
+
+
+
+                    this.origin.addEventListener('click', event => {
+						this.open();
+					});
+
+					if(this.hover) {
+						this.origin.addEventListener('mouseenter', event => {
+							this.open();
+						});
+
+						document.addEventListener('mousemove', event => {
+							let dx = this.dropdown.getBoundingClientRect().x, dw = this.dropdown.offsetWidth;
+							let dy = this.dropdown.getBoundingClientRect().y, dh = this.dropdown.offsetHeight;
+							let ox = this.origin.getBoundingClientRect().x, ow = this.origin.offsetWidth;
+							let oy = this.origin.getBoundingClientRect().y, oh = this.origin.offsetHeight;
+
+							if ( (event.clientX >= dx || event.clientX >= ox) && (event.clientY >= dy || event.clientY >= oy )) {
+								if (
+									(event.clientX <= dx + dw || event.clientX <= ox + ow)
+										&&
+									(event.clientY <= dy + dh || event.clientY <= oy + oh )
+								) {
+
+								}  else {
+									this.close();
+								}
+							}  else {
+								this.close();
+							}
+						});
+					}
+					document.addEventListener('click', event => {
+						const on_dropdown = this.dropdown.contains(event.target);
+						const on_origin = this.origin.contains(event.target);
+
+						if(!on_dropdown && !on_origin) {
+							this.close();
+						}
+					});
+				}
+			}
+
+			let dropdown_hover, dropdown_click;
+            window.addEventListener('load', event => {
+                dropdown_hover = new Dropdown(document.getElementById('dropdown_hover_open'), document.getElementById('dropdown_el_hover'), 0, 10, true);
+                dropdown_click = new Dropdown(document.getElementById('dropdown_click_open'), document.getElementById('dropdown_el_click'), 0, 10);
+
+				console.log(dropdown_hover, dropdown_click)
+                if(dropdown_click === dropdown_hover) {
+                    console.log(true);
+				}
+            });
+		</script>
+		<div class='dropdown' id='dropdown_el_hover'>
+			<h1>Hover dropdown</h1>
+		</div>
+		<div class='dropdown' id='dropdown_el_click'>
+			<h1>Clickable dropdown</h1>
+		</div>
+		<button id='dropdown_hover_open' type='button'>Hover for a dropdown</button>
+		<button id='dropdown_click_open' type='button'>Click for a dropdown</button>
+	</body>
+</html>
