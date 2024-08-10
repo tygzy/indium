@@ -5,8 +5,6 @@
 *
 */
 
-let all_dropdowns = [], all_labels = [];
-
 class PopWindow {
     constructor(window, window_close) {
         this.window = window;
@@ -194,15 +192,12 @@ class Gallery {
         this.open_gallery();
         let new_item = document.createElement('img');
 
-        if(item_number) { item_number = parseInt(item_number); }
+        if(item_number) { item_number = parseInt(item_number); this.current_item = item_number; }
 
         if(this.direct) { new_item.src = this.container.children[item_number ?? this.current_item].src; }
         else { new_item.src = this.container.getElementsByTagName('img')[item_number ?? this.current_item].src; }
 
         new_item.id = 'indium_gallery_expanded_image';
-        if(item_number) {
-            this.current_item = item_number;
-        }
 
         this.remove_item();
         this.item_view.appendChild(new_item);
@@ -270,7 +265,6 @@ class UploadPreview {
             this.files.push(this.input.files[j]);
             let file_preview;
             const file_reader = new FileReader();
-            console.log(this.image_extensions.includes(this.re.exec(this.input.files[j].name)[1]));
             if(this.image_extensions.includes(this.re.exec(this.input.files[j].name)[1])) {
                 file_preview = document.createElement('img');
             } else if(this.video_extensions.includes(this.re.exec(this.input.files[j].name)[1])) {
@@ -278,9 +272,10 @@ class UploadPreview {
                 file_preview.controls = true;
             }
 
-            file_reader.onload = function (event) {
+            file_reader.addEventListener('load', event => {
                 file_preview.setAttribute('src', event.target.result);
-            }
+            });
+
             file_reader.readAsDataURL(this.input.files[j]);
             this.container.appendChild(file_preview);
         }
@@ -291,4 +286,116 @@ class UploadPreview {
             this.add_preview();
         });
     }
+}
+
+
+class SlideShow {
+
+    constructor(controls, items_container, timer) {
+        // controls = the container of the slideshow item navigation
+        // items_container = the container of the specific items you want to scroll through
+        // timer = the amount of time for the slideshow to automatically progress, units are in seconds, 1 = 1 second
+        this.controls = controls;
+        this.items_container = items_container;
+        this.current_position = 0;
+        this.timer = timer * 1000;
+
+        this.slideshow_timer = null;
+
+        this.items_container.children[0].classList.add('active');
+        this.controls.children[0].classList.add('active');
+
+        this._auto_run();
+    }
+
+    get get_position() {
+        return this.current_position;
+    }
+
+    set_position(position) {
+        if(position > this.items_container.children.length) {
+            this.current_position = this.items_container.children.length - 1;
+        } else if(position < 0) {
+            this.current_position = 0;
+        } else {
+            this.current_position = position;
+        }
+    }
+
+    next_position() {
+        if(this.current_position == this.items_container.children.length - 1) {
+            this.current_position = 0;
+        } else {
+            this.current_position += 1;
+        }
+    }
+
+    previous_position() {
+        if(this.current_position == 0) {
+            this.current_position = this.items_container.children.length - 1;
+        } else {
+            this.current_position -= 1;
+        }
+    }
+
+    next_item() {
+        let existing_item = this.items_container.children[this.current_position];
+
+        this.next_position();
+        existing_item.classList.remove('active');
+
+        this._change_item();
+    }
+
+    previous_item() {
+        let existing_item = this.items_container.children[this.current_position];
+
+        this.previous_position();
+        existing_item.classList.remove('active');
+
+        this._change_item();
+    }
+
+    set_item(position) {
+        let existing_item = this.items_container.children[this.current_position];
+
+        this.set_position(position);
+
+        let new_item = this.items_container.children[this.current_position];
+
+        if(existing_item !== new_item) {
+            existing_item.classList.remove('active');
+
+            new_item.classList.add('active');
+        }
+
+        this.set_controls();
+
+        clearInterval(this.slideshow_timer);
+        this.slideshow_timer = setInterval(this.next_item.bind(this), this.timer);
+    }
+
+    set_controls() {
+        let active_control = this.controls.getElementsByClassName('active');
+        while(active_control[0]) {
+            active_control[0].classList.remove('active');
+        }
+        this.controls.children[this.current_position].classList.add('active');
+    }
+
+    _change_item() {
+        let new_item = this.items_container.children[this.current_position];
+
+        new_item.classList.add('active');
+
+        this.set_controls();
+
+        clearInterval(this.slideshow_timer);
+        this.slideshow_timer = setInterval(this.next_item.bind(this), this.timer);
+    }
+
+    _auto_run() {
+        this.slideshow_timer = setInterval(this.next_item.bind(this), this.timer);
+    }
+
 }
