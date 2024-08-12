@@ -401,3 +401,54 @@ class SlideShow {
 }
 
 
+class ContextMenu {
+    // for classname, if you include '*', it will act as a document wide right click, not requiring you to hover over
+    // any element in specific, like the standard context menu
+    constructor(context_menu, classname) {
+        this.context_menu = context_menu;
+        this.associated_class = [];
+        this.associated_class.push(classname);
+        this._auto_run();
+    }
+
+    add_associated_class(classname) {
+        this.associated_class.push(classname);
+    }
+
+    open(x, y) {
+        this.context_menu.classList.add('active');
+
+        this.context_menu.style.left = `${x}px`;
+        this.context_menu.style.top = `${y}px`;
+    }
+
+    close() {
+        this.context_menu.classList.remove('active');
+    }
+
+    get is_open() {
+        return this.context_menu.classList.contains('active');
+    }
+
+    _auto_run() {
+        document.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+            if(this.associated_class.contains('*')) {
+                this.open(event.clientX, event.clientY);
+            }
+            for(let i=0; i<this.associated_class.length; i++) {
+                if(this.associated_class[i].matches(':hover')) {
+                    this.open(event.clientX, event.clientY);
+                }
+            }
+        });
+
+        document.addEventListener('mousedown', (event) => {
+            if(this.is_open) {
+                if(!this.context_menu.matches(':hover')) {
+                    this.close();
+                }
+            }
+        });
+    }
+}
