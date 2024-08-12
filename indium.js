@@ -312,7 +312,7 @@ class SlideShow {
         return this.current_position;
     }
 
-    set_position(position) {
+    _set_position(position) {
         if(position > this.items_container.children.length) {
             this.current_position = this.items_container.children.length - 1;
         } else if(position < 0) {
@@ -322,7 +322,7 @@ class SlideShow {
         }
     }
 
-    next_position() {
+    _next_position() {
         if(this.current_position == this.items_container.children.length - 1) {
             this.current_position = 0;
         } else {
@@ -330,7 +330,7 @@ class SlideShow {
         }
     }
 
-    previous_position() {
+    _previous_position() {
         if(this.current_position == 0) {
             this.current_position = this.items_container.children.length - 1;
         } else {
@@ -341,7 +341,7 @@ class SlideShow {
     next_item() {
         let existing_item = this.items_container.children[this.current_position];
 
-        this.next_position();
+        this._next_position();
         existing_item.classList.remove('active');
 
         this._change_item();
@@ -350,7 +350,7 @@ class SlideShow {
     previous_item() {
         let existing_item = this.items_container.children[this.current_position];
 
-        this.previous_position();
+        this._previous_position();
         existing_item.classList.remove('active');
 
         this._change_item();
@@ -359,7 +359,7 @@ class SlideShow {
     set_item(position) {
         let existing_item = this.items_container.children[this.current_position];
 
-        this.set_position(position);
+        this._set_position(position);
 
         let new_item = this.items_container.children[this.current_position];
 
@@ -369,13 +369,13 @@ class SlideShow {
             new_item.classList.add('active');
         }
 
-        this.set_controls();
+        this._set_controls();
 
         clearInterval(this.slideshow_timer);
         this.slideshow_timer = setInterval(this.next_item.bind(this), this.timer);
     }
 
-    set_controls() {
+    _set_controls() {
         let active_control = this.controls.getElementsByClassName('active');
         while(active_control[0]) {
             active_control[0].classList.remove('active');
@@ -388,7 +388,7 @@ class SlideShow {
 
         new_item.classList.add('active');
 
-        this.set_controls();
+        this._set_controls();
 
         clearInterval(this.slideshow_timer);
         this.slideshow_timer = setInterval(this.next_item.bind(this), this.timer);
@@ -399,3 +399,5 @@ class SlideShow {
     }
 
 }
+
+
