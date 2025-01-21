@@ -164,6 +164,22 @@ class Gallery {
         return this.container.children[this.current_item];
     }
 
+    get is_first_item() {
+        if(this.current_item) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    get is_last_item() {
+        if(this.current_item >= this.container.children.length - 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     next_item() {
         if(this.current_item < 0) {
             this.current_item = 0;
