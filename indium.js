@@ -165,7 +165,7 @@ class Gallery {
     }
 
     get is_first_item() {
-        if(this.current_item) {
+        if(this.current_item == 0) {
             return true;
         } else {
             return false;
@@ -210,8 +210,8 @@ class Gallery {
 
         if(item_number) { item_number = parseInt(item_number); this.current_item = item_number; }
 
-        if(this.direct) { new_item.src = this.container.children[item_number ?? this.current_item].src; }
-        else { new_item.src = this.container.getElementsByTagName('img')[item_number ?? this.current_item].src; }
+        if(this.direct) { new_item.src = this.container.children[item_number ?? this.current_item].src.split('?')[0]; }
+        else { new_item.src = this.container.getElementsByTagName('img')[item_number ?? this.current_item].src.split('?')[0]; }
 
         new_item.id = 'indium_gallery_expanded_image';
 
