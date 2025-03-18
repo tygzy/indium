@@ -149,11 +149,15 @@ class Gallery {
     *
     */
 
-    constructor(container, item_view, direct_children=true) {
+    constructor(container, item_view, direct_children=true, keybinds=true) {
         this.container = container;
         this.item_view = item_view;
         this.current_item = null;
         this.direct = direct_children;
+        this.keybinds = keybinds;
+        if(this.keybinds) {
+            this.enable_keybinds();
+        }
     }
 
     get has_item_open() {
@@ -178,6 +182,19 @@ class Gallery {
         } else {
             return false;
         }
+    }
+
+    enable_keybinds() {
+        document.addEventListener('keydown', (event) => {
+            switch (event.key) {
+                case "ArrowLeft":
+                    this.previous_item();
+                    break;
+                case "ArrowRight":
+                    this.next_item();
+                    break;
+            }
+        })
     }
 
     next_item() {
