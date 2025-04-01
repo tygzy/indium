@@ -160,10 +160,11 @@ class Gallery {
     *
     * @param {Element} container - The container of all the items that can be opened in the gallery.
     * @param {Element} item_view - The container element which will be used to show a specific item onto the screen.
+    * @param {Element} footnote_container - Allows a footnote for images if you want to have them, works by using the "title" attribute on an image.
     *
     */
 
-    constructor(container, item_view, direct_children=true, keybinds=true) {
+    constructor(container, item_view, footnote_container=null, direct_children=true, keybinds=true) {
         this.container = container;
         this.item_view = item_view;
         this.current_item = null;
@@ -172,6 +173,7 @@ class Gallery {
         if(this.keybinds) {
             this.enable_keybinds();
         }
+        this.footnote = footnote_container;
     }
 
     get has_item_open() {
@@ -247,7 +249,20 @@ class Gallery {
         new_item.id = 'indium_gallery_expanded_image';
 
         this.remove_item();
+        this.remove_footnote();
+
         this.item_view.appendChild(new_item);
+        this.add_footnote();
+    }
+
+    add_footnote() {
+        if(this.container.children[this.current_item].title) {
+            this.footnote.innerText = this.container.children[this.current_item].title;
+        }
+    }
+
+    remove_footnote() {
+        this.footnote.innerText = '';
     }
 
     remove_item() {
