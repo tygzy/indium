@@ -6,10 +6,14 @@
 */
 
 class PopWindow {
-    constructor(window, window_close) {
+    constructor(window, window_close, keybinds=true) {
         this.window = window;
         this.window_close = window_close;
         this._auto_run();
+        this.keybinds = keybinds;
+        if(this.keybinds) {
+            this.enable_keybinds();
+        }
     }
 
     open() {
@@ -28,6 +32,16 @@ class PopWindow {
         this.window_close.addEventListener('click', event => {
             this.close();
         });
+    }
+
+    enable_keybinds() {
+        document.addEventListener('keydown', (event) => {
+            switch (event.key) {
+                case "Escape":
+                    this.close();
+                    break;
+            }
+        })
     }
 }
 
@@ -291,11 +305,21 @@ class UploadPreview {
         this.image_extensions = ['png', 'jpg', 'bmp', 'gif', 'jpeg', 'svg', 'tiff'];
         this.video_extensions = ['mp4', 'avi', 'mov', 'wmv', 'mkv', 'webm', 'avchd', 'mpeg', 'mpg'];
         this.re = /(?:\.([^.]+))?$/;
+        this.multiple = this.input.multiple;
     }
 
     add_preview() {
         for(let j=0; j<this.input.files.length; j++) {
-            this.files.push(this.input.files[j]);
+
+            if(this.multiple) {
+                this.files.push(this.input.files[j]);
+            } else {
+                if(this.files.length == 0) {
+                    this.files.push(this.input.files[j]);
+                } else {
+                    this.files = [this.input.files[j]];
+                }
+            }
             let file_preview;
             const file_reader = new FileReader();
             if(this.image_extensions.includes(this.re.exec(this.input.files[j].name)[1])) {
@@ -310,7 +334,16 @@ class UploadPreview {
             });
 
             file_reader.readAsDataURL(this.input.files[j]);
-            this.container.appendChild(file_preview);
+            if(this.multiple) {
+                this.container.appendChild(file_preview);
+            } else {
+                console.log(this.container.getElementsByTagName('img').length);
+                if(this.container.getElementsByTagName('img').length > 0) {
+                    this.container.replaceChild(file_preview, this.container.getElementsByTagName('img')[0]);
+                } else {
+                    this.container.appendChild(file_preview);
+                }
+            }
         }
     }
 
