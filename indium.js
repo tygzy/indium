@@ -6,7 +6,7 @@
 */
 
 class PopWindow {
-    constructor(window, window_close, keybinds=true) {
+    constructor(window, window_close=null, keybinds=true) {
         this.window = window;
         this.window_close = window_close;
         this._auto_run();
@@ -29,9 +29,11 @@ class PopWindow {
     }
 
     _auto_run() {
-        this.window_close.addEventListener('click', event => {
-            this.close();
-        });
+        if(this.window_close) {
+            this.window_close.addEventListener('click', event => {
+                this.close();
+            });
+        }
     }
 
     enable_keybinds() {
@@ -164,9 +166,10 @@ class Gallery {
     *
     */
 
-    constructor(container, item_view, footnote_container=null, direct_children=true, keybinds=true) {
+    constructor(container, item_view, sub_view=null, footnote_container=null, direct_children=true, keybinds=true) {
         this.container = container;
         this.item_view = item_view;
+        this.sub_view = sub_view;
         this.current_item = null;
         this.direct = direct_children;
         this.keybinds = keybinds;
@@ -208,6 +211,9 @@ class Gallery {
                     break;
                 case "ArrowRight":
                     this.next_item();
+                    break;
+                case "Escape":
+                    this.close_gallery();
                     break;
             }
         })
@@ -251,7 +257,11 @@ class Gallery {
         this.remove_item();
         this.remove_footnote();
 
-        this.item_view.appendChild(new_item);
+        if(this.sub_view) {
+            this.sub_view.appendChild(new_item);
+        } else {
+            this.item_view.appendChild(new_item);
+        }
         this.add_footnote();
     }
 
@@ -352,8 +362,7 @@ class UploadPreview {
             if(this.multiple) {
                 this.container.appendChild(file_preview);
             } else {
-                console.log(this.container.getElementsByTagName('img').length);
-                if(this.container.getElementsByTagName('img').length > 0) {
+                if(this.container.getElementsByTagName(file_preview.tagName).length > 0) {
                     this.container.replaceChild(file_preview, this.container.getElementsByTagName('img')[0]);
                 } else {
                     this.container.appendChild(file_preview);
