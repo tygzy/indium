@@ -6,12 +6,11 @@
 */
 
 class PopWindow {
-    constructor(window, window_close=null, keybinds=true, title_bar=null, movable=false) {
+    constructor(window, window_close=null, keybinds=true, drag_bar=null) {
         this.window = window;
         this.window_close = window_close;
         this.keybinds = keybinds;
-        this.title_bar = title_bar;
-        this.movable = movable;
+        this.drag_bar = drag_bar;
         this._auto_run();
         if(this.keybinds) {
             this.enable_keybinds();
@@ -37,9 +36,9 @@ class PopWindow {
             });
         }
 
-        if(this.movable) {
+        if(this.drag_bar) {
             let mouse_down;
-            this.title_bar.addEventListener('mousedown', (event) => {
+            this.drag_bar.addEventListener('mousedown', (event) => {
                 mouse_down = true;
             });
 
