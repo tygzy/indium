@@ -6,11 +6,13 @@
 */
 
 class PopWindow {
-    constructor(window, window_close=null, keybinds=true) {
+    constructor(window, window_close=null, keybinds=true, title_bar=null, movable=false) {
         this.window = window;
         this.window_close = window_close;
-        this._auto_run();
         this.keybinds = keybinds;
+        this.title_bar = title_bar;
+        this.movable = movable;
+        this._auto_run();
         if(this.keybinds) {
             this.enable_keybinds();
         }
@@ -32,6 +34,26 @@ class PopWindow {
         if(this.window_close) {
             this.window_close.addEventListener('click', event => {
                 this.close();
+            });
+        }
+
+        if(this.movable) {
+            let mouse_down;
+            this.title_bar.addEventListener('mousedown', (event) => {
+                mouse_down = true;
+            });
+
+            window.addEventListener('mouseup', (event) => {
+                mouse_down = false;
+            });
+
+            window.addEventListener('mousemove', (event) => {
+                if(mouse_down) {
+                    let window_pos = this.window.getBoundingClientRect();
+                    this.window.style.top = (event.movementY + window_pos.y) + 'px';
+                    this.window.style.left = (event.movementX + window_pos.x) + 'px';
+                    this.window.style.transform = 'none';
+                }
             });
         }
     }
@@ -272,7 +294,9 @@ class Gallery {
     }
 
     remove_footnote() {
-        this.footnote.innerText = '';
+        if(this.footnote) {
+            this.footnote.innerText = '';
+        }
     }
 
     remove_item() {
@@ -462,7 +486,7 @@ class SlideShow {
         this._set_controls();
 
         clearInterval(this.slideshow_timer);
-        this.slideshow_timer = setInterval(this.next_item.bind(this), this.timer);
+        this._start_timer();
     }
 
     _set_controls() {
@@ -481,11 +505,17 @@ class SlideShow {
         this._set_controls();
 
         clearInterval(this.slideshow_timer);
-        this.slideshow_timer = setInterval(this.next_item.bind(this), this.timer);
+        this._start_timer();
+    }
+
+    _start_timer() {
+        if(this.timer) {
+            this.slideshow_timer = setInterval(this.next_item.bind(this), this.timer);
+        }
     }
 
     _auto_run() {
-        this.slideshow_timer = setInterval(this.next_item.bind(this), this.timer);
+        this._start_timer();
     }
 
 }
