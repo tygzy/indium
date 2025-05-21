@@ -287,8 +287,12 @@ class Gallery {
     }
 
     add_footnote() {
-        if(this.container.children[this.current_item].title) {
-            this.footnote.innerText = this.container.children[this.current_item].title;
+        let footnote_text;
+        if(this.direct) { footnote_text = this.container.children[this.current_item].title; }
+        else { footnote_text = this.container.getElementsByTagName('img')[this.current_item].title; }
+
+        if(footnote_text) {
+            this.footnote.innerText = footnote_text;
         }
     }
 
